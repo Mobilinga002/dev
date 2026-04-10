@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS Consumption Dashboard - 2025</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>AWS Consumption Dashboard</h1>
+        <p class="subtitle">Monthly Costs 2025</p>
+      </div>
+      <button id="change-file-btn" class="btn-secondary" style="display: none;">
+        Change File
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Upload Section -->
+    <section id="upload-section">
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-zone-content">
+          <svg class="upload-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <h2>Upload AWS Cost Report</h2>
+          <p>Drag & drop your CSV file here or click to browse</p>
+          <label class="btn-primary upload-btn">
+            Choose File
+            <input type="file" id="file-input" accept=".csv" hidden>
+          </label>
+          <p class="hint">Supports AWS Cost Explorer exports (wide and long format)</p>
+          <a href="sample-data.csv" download class="sample-link">Download sample CSV</a>
+        </div>
+      </div>
+      <p class="privacy-note">Your data stays in your browser &mdash; nothing is uploaded to any server.</p>
+    </section>
+
+    <!-- Error Banner -->
+    <div id="error-banner" class="error-banner" style="display: none;">
+      <span id="error-message"></span>
+      <button id="error-close" class="error-close">&times;</button>
+    </div>
+
+    <!-- Summary Cards -->
+    <section id="summary-section" class="dashboard-content" style="display: none;">
+      <div class="summary-cards">
+        <div class="card">
+          <div class="card-label">Total Cost</div>
+          <div class="card-value" id="total-cost">$0.00</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Monthly Average</div>
+          <div class="card-value" id="avg-cost">$0.00</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Highest Month</div>
+          <div class="card-value" id="highest-month">-</div>
+          <div class="card-sub" id="highest-month-cost">$0.00</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Services</div>
+          <div class="card-value" id="service-count">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section id="charts-section" class="dashboard-content" style="display: none;">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Monthly Costs</h3>
+          <canvas id="bar-chart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Cost by Service</h3>
+          <canvas id="doughnut-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter & Table -->
+    <section id="table-section" class="dashboard-content" style="display: none;">
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Detailed Breakdown</h3>
+          <div class="filter-group">
+            <label for="service-filter">Filter by Service:</label>
+            <div class="filter-dropdown" id="filter-dropdown">
+              <button class="filter-btn" id="filter-btn">All Services</button>
+              <div class="filter-menu" id="filter-menu">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="data-table">
+            <thead>
+              <tr>
+                <th data-sort="month" class="sortable">Month <span class="sort-icon"></span></th>
+                <th data-sort="service" class="sortable">Service <span class="sort-icon"></span></th>
+                <th data-sort="cost" class="sortable sort-active sort-desc">Cost <span class="sort-icon"></span></th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2"><strong>Total</strong></td>
+                <td class="cost-cell" id="table-total"><strong>$0.00</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>AWS Consumption Dashboard &mdash; Data processed locally in your browser</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
